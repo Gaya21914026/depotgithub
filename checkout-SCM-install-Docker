@@ -18,6 +18,7 @@ pipeline {
         stage('install Docker') {
             steps {
                 sh '''
+                    sudo apt purge docker* -y 
                     sudo apt update
                     sudo apt install -y ca-certificates curl
 
