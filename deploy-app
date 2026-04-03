@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = 'myapp-image'
+        CONTAINER_NAME = 'myapp'
+    }
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Clone Git') {
+            steps {
+                sh 'rm -rf depotgithub'
+                sh 'git clone https://github.com/Gaya21914026/depotgithub.git'
+
+            }
+        }
+	
+	stage('Clean Docker Workspace') {
+            steps {
+                sh '''
+                    sudo systemctl restart docker 
+                    docker rm -f $(docker ps -aq)
+                    docker rmi -f $(docker images -aq) 
+                    docker system prune -af --volumes
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('depotgithub') {
+                    sh 'docker build -t ${IMAGE_NAME} .'
+                }
+            }
+        }
+
+        stage('Create and run  Container') {
+            steps {
+                sh '''
+                    docker run -d --name ${CONTAINER_NAME} -p 8080:80 ${IMAGE_NAME}
+                '''
+            }
+        }
+    }
+}
