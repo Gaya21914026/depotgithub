@@ -24,9 +24,14 @@ pipeline {
 	stage('Clean Docker Workspace') {
             steps {
                 sh '''
-                    sudo systemctl restart docker 
-                    docker rm -f $(docker ps -aq)
-                    docker rmi -f $(docker images -aq) 
+                    sudo systemctl restart docker
+		    if ["$(docker ps -aq)"] then
+			docker stop $(docker ps -a -q)  
+                    	docker rm -f $(docker ps -aq)
+		    fi
+                    if ["$(docker images -aq)"]
+			docker rmi -f $(docker images -aq)
+		    fi 
                     docker system prune -af --volumes
                 '''
             }
