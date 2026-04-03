@@ -6,4 +6,7 @@ RUN apt-get update && apt-get install -y \
     iputils-ping \
     && rm -rf /var/lib/apt/lists/*
 
-COPY . /usr/share/nginx/html
+COPY assets /usr/share/nginx/html
+COPY css /usr/share/nginx/html
+COPY js /usr/share/nginx/html
+COPY index.html /usr/share/nginx/html
