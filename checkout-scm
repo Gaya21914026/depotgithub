@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    stages {
+        stage('clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('clone git') {
+            steps {
+                sh 'rm -rf depotgithub'
+                sh 'git clone https://github.com/Gaya21914026/depotgithub.git'
+            }
+        }
+    }
